@@ -43,14 +43,14 @@ static void *pContext = &pContext;
             [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
                 // Get the value NOW because it may be deleted afterwards
                 NSString *value = [self.dataSource.allData objectAtIndex:idx];
-                dispatch_sync(self.dataSourceQueue, ^(void) {
+                dispatch_async(self.dataSourceQueue, ^(void) {
                     NSLog(@"%lu, %@", (unsigned long)idx, value);
                     [[self mutableArrayValueForKey:@"localData"] addObject:value];
                 });
             }];
         } else if ([kind isEqualToValue:@(NSKeyValueChangeRemoval)]) {
             [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-                dispatch_sync(self.dataSourceQueue, ^(void) {
+                dispatch_async(self.dataSourceQueue, ^(void) {
                     NSLog(@"%lu", (unsigned long)idx);
                     [[self mutableArrayValueForKey:@"localData"] removeObjectAtIndex:idx];
                 });

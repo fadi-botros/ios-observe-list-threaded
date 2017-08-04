@@ -18,13 +18,13 @@
 
 -(void) start {
     NSMutableArray *dataToChange = [self.dataSource mutableArrayValueForKey:@"allData"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         NSLog(@"Adding string1");
         [dataToChange addObject:@"String1"];
         NSLog(@"Adding string2");
         [dataToChange addObject:@"String2"];
     });
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^{
         NSLog(@"Adding string3");
         [dataToChange addObject:@"String3"];
         NSLog(@"removing indexed 1");

@@ -57,30 +57,26 @@ static void *pContext = &pContext;
             // Sync it, to make the UI thread wait until changes are stable, and make sure no
             // other changes in localData will happen until the change happens on the UI, localData
             // will WAIT until update happens then resume to be updated by the main data
-            dispatch_async([viewModel dataSourceQueue], ^(void) {
-                NSLog(@"Entering main queue");
-                dispatch_sync(dispatch_get_main_queue(), ^(void) {
-                    NSLog(@"Entered main queue");
-                    [tableView beginUpdates];
-                    [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-                        NSLog(@"Inserting %lu", (unsigned long)idx);
-                        [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]
-                                         withRowAnimation:UITableViewRowAnimationAutomatic];
-                    }];
-                    [tableView endUpdates];
-                });
+            NSLog(@"Entering main queue");
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                NSLog(@"Entered main queue");
+                [tableView beginUpdates];
+                [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+                    NSLog(@"Inserting %lu", (unsigned long)idx);
+                    [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]
+                                     withRowAnimation:UITableViewRowAnimationAutomatic];
+                }];
+                [tableView endUpdates];
             });
         } else if (kind == NSKeyValueChangeRemoval) {
-            dispatch_async([viewModel dataSourceQueue], ^(void) {
-                dispatch_sync(dispatch_get_main_queue(), ^(void) {
-                    [tableView beginUpdates];
-                    [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-                        NSLog(@"Deleting %lu", (unsigned long)idx);
-                        [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]
-                                         withRowAnimation:UITableViewRowAnimationAutomatic];
-                    }];
-                    [tableView endUpdates];
-                });
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                [tableView beginUpdates];
+                [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+                    NSLog(@"Deleting %lu", (unsigned long)idx);
+                    [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:idx inSection:0]]
+                                     withRowAnimation:UITableViewRowAnimationAutomatic];
+                }];
+                [tableView endUpdates];
             });
         }
     } else {
